@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
+import entity.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
@@ -89,16 +90,16 @@ public class BrandServiceImpl implements BrandService {
         //2.判断组装条件
         if (brand != null) {
             //ctr+ q
-            if(StringUtils.isNotBlank(brand.getName())){
-                criteria.andLike("name","%"+brand.getName()+"%");// name like "%联想%"
+            if (StringUtils.isNotBlank(brand.getName())) {
+                criteria.andLike("name", "%" + brand.getName() + "%");// name like "%联想%"
             }
 
-            if(StringUtils.isNotBlank(brand.getFirstChar())){
-                criteria.andLike("firstChar","%"+brand.getFirstChar()+"%");// firstChar="%l%"
+            if (StringUtils.isNotBlank(brand.getFirstChar())) {
+                criteria.andLike("firstChar", "%" + brand.getFirstChar() + "%");// firstChar="%l%"
             }
         }
         //3.开始分页
-        PageHelper.startPage(pageNo,pageSize);
+        PageHelper.startPage(pageNo, pageSize);
         //4.执行查询
         List<TbBrand> brands = brandMapper.selectByExample(example);
         //5.返回pageinfo
@@ -111,5 +112,27 @@ public class BrandServiceImpl implements BrandService {
         PageInfo pageInfo1 = JSON.parseObject(str, PageInfo.class);
 
         return pageInfo1;
+    }
+
+    /**
+     * 删除品牌
+     *
+     * @param ids
+     * @return
+     */
+    @Override
+    public Result delBrandService(Long[] ids) {
+        //判断是否有数据
+        if (ids.length == 0) {
+            return new Result(false, "请选择要删除的数据");
+        }
+        Example example = new Example(TbBrand.class);
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+        int i = brandMapper.deleteByExample(example);
+        if (i==0) {
+            return new Result(false,"删除失败，请稍后再试");
+        }
+
+        return new Result(true,"删除成功");
     }
 }

@@ -1,6 +1,9 @@
 package com.pinyougou.manager.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
@@ -86,4 +89,11 @@ public class BrandController {
             @RequestBody TbBrand brand){
         return brandService.findPage(pageNo,pageSize,brand);
     }
+    //删除品牌
+    @RequestMapping("/delBrand")
+    public Result delBrand(@RequestBody  Long[] ids){
+      return    brandService.delBrandService(ids);
+
+    }
+
 }

@@ -2,6 +2,7 @@ package com.pinyougou.sellergoods.service;
 
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbBrand;
+import entity.Result;
 
 import java.util.List;
 
@@ -36,4 +37,7 @@ public interface BrandService {
 
     //条件查询 分页
     PageInfo<TbBrand> findPage(Integer pageNo, Integer pageSize, TbBrand brand);
+
+
+    Result delBrandService(Long[] ids);
 }
