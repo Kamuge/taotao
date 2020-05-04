@@ -92,8 +92,12 @@ public class BrandController {
     //删除品牌
     @RequestMapping("/delBrand")
     public Result delBrand(@RequestBody  Long[] ids){
-      return    brandService.delBrandService(ids);
-
+      return   brandService.delBrandService(ids);
+    }
+    //保存品牌
+    @RequestMapping("/save")
+    public Result  save(@RequestBody String param){
+        return brandService.saveBrand(param);
     }
 
 }

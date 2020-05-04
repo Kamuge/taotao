@@ -40,4 +40,6 @@ public interface BrandService {
 
 
     Result delBrandService(Long[] ids);
+
+    Result saveBrand(String param);
 }

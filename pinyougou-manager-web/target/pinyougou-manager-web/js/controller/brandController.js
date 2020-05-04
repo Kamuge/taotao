@@ -5,7 +5,8 @@ var app=new Vue({
         entity:{},
         ids:[],
         pages:15,//总页数
-        pageNo:1//当前页码
+        pageNo:1,//当前页码
+        status:0  //0表示是增加品牌
     },
     methods:{
         searchList:function (curPage) {
@@ -19,6 +20,30 @@ var app=new Vue({
                 //总页数
                 app.pages=response.data.pages;
             });
+        },
+        //修改品牌功能
+        update:function(entity){
+            console.log("修改"+entity)
+            app.entity=entity;
+            app.status=1;
+        },
+        add:function(){
+            console.log("增加");
+            app.status=0;
+        },
+        save:function(){
+            console.log("打印是什么操作");
+            console.log(app.status)
+            console.log("再打印品牌数据")
+            console.log(app.entity)
+            axios.post('/brand/save.shtml',{TbBrand:app.entity,status:app.status}).then(function (res) {
+                if (res.data.success) {
+                    app.searchList(1);
+                }else{
+                    alert(res.data.message);
+                }
+            })
+
         },
         //查询所有品牌列表
         findAll:function () {
@@ -46,7 +71,12 @@ function del() {
     //用原生的JS
    console.log(app.ids)
     axios.post("/brand/delBrand.shtml",app.ids).then(function (res) {
-
+        if (res.data.success) {
+            app.searchList(1);
+        }else{
+            alert("删除失败")
+        }
     })
 
 }
+

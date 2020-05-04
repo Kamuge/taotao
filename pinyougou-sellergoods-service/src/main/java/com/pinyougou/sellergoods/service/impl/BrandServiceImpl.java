@@ -2,6 +2,7 @@ package com.pinyougou.sellergoods.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.mapper.TbBrandMapper;
@@ -134,5 +135,36 @@ public class BrandServiceImpl implements BrandService {
         }
 
         return new Result(true,"删除成功");
+    }
+    //保存品牌
+    @Override
+    public Result saveBrand(String param) {
+        JSONObject jsonObject = JSON.parseObject(param);
+        Long status = jsonObject.getLong("status");
+        if (StringUtils.isEmpty(status.toString())) {
+            return new Result(false,"请选择是增加还是修改品牌");
+        }
+        TbBrand tbBrand = jsonObject.getObject("TbBrand", TbBrand.class);
+        if (StringUtils.isEmpty(tbBrand.getFirstChar())) {
+            return new Result(false,"品牌首字母不能为空");
+        }
+        if (StringUtils.isEmpty(tbBrand.getName())) {
+            return new Result(false,"品牌不能为空");
+        }
+        if (0==status) {
+            //增加品牌
+            int i = brandMapper.insertSelective(tbBrand);
+            if (i>0) {
+                return new Result(true,"增加成功");
+            }else{
+                return new Result(false,"增加失败");
+            }
+        }
+        int i = brandMapper.updateByPrimaryKey(tbBrand);
+        if (i!=0) {
+            return new Result(true,"修改成功");
+        }
+        return new Result(false,"修改失败");
+
     }
 }
